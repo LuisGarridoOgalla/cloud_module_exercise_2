@@ -1,33 +1,31 @@
-name: Deploy to GitHub Pages
-
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  deploy:
+  cd:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: install dependencies
+      - name: Use SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{secrets.SSH_PRIVADE_KEY}}" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+
+      - name: Git config
+        run: |
+          git config --global user.email "cd-user@my-app.com"
+          git config --global user.name "cd-user"
+
+      - name: Install
         run: npm install
 
-      - name: build
+      - name: Build
         run: npm run build
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-          
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+
+      - name: Deploy
+        run: npm run deploy
