@@ -13,12 +13,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: install
-        run: pnpm install
+        run: npm install
 
       - name: build
-        run: pnpm run build
+        run: npm run build
 
       - name: Deploy to GitHub Pages
-        run: pnpm run deploy
+        run: npm run deploy
 
       
