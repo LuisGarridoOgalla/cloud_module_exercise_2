@@ -1,25 +1,33 @@
-name: CD WORKFLOW
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-      
-jobs:
-  build:
-    runs-on: ubuntu-latest
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: install
+      - name: install dependencies
         run: npm install
 
       - name: build
         run: npm run build
-
-      - name: Deploy to GitHub Pages
-        run: npm run deploy
-
       
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+          
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
